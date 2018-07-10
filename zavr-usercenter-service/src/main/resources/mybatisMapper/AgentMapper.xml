@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zavr.usercenterservice.mapper.AgentMapper" >
+  <resultMap id="BaseResultMap" type="com.zavr.usercenterservice.pojos.Agent" >
+    <id column="ID" property="id" jdbcType="INTEGER" />
+    <result column="Name" property="name" jdbcType="VARCHAR" />
+    <result column="SimpleName" property="simplename" jdbcType="VARCHAR" />
+    <result column="OpenDateTime" property="opendatetime" jdbcType="TIMESTAMP" />
+    <result column="ApplyDateTime" property="applydatetime" jdbcType="TIMESTAMP" />
+    <result column="Province" property="province" jdbcType="VARCHAR" />
+    <result column="City" property="city" jdbcType="VARCHAR" />
+    <result column="Region" property="region" jdbcType="VARCHAR" />
+    <result column="Level" property="level" jdbcType="INTEGER" />
+    <result column="Linkman" property="linkman" jdbcType="VARCHAR" />
+    <result column="LinkMobilePhone" property="linkmobilephone" jdbcType="VARCHAR" />
+    <result column="LinkTelephone" property="linktelephone" jdbcType="VARCHAR" />
+    <result column="Email" property="email" jdbcType="VARCHAR" />
+    <result column="Status" property="status" jdbcType="INTEGER" />
+    <result column="ModifyTime" property="modifytime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <select id="queryAgent" resultType="com.zavr.usercenterservice.pojos.Agent" parameterType="com.zavr.usercenterservice.pojos.Agent">
+    select * from agent
+    <choose>
+      <when test="name!=null">
+        where Name=#{name}
+      </when>
+      <when test="id!=null">
+        where ID=#{id}
+      </when>
+      <otherwise>
+        where ID=-1
+      </otherwise>
+    </choose>
+  </select>
+  <insert id="addAgent" parameterType="com.zavr.usercenterservice.pojos.Agent">
+    insert into agent(Name,Simplename,Province,City,Region,Address,Level,Linkman,LinkMobilePhone,LinkTelephone,Email,Status,Address)
+    values(#{name},#{simplename},#{province},#{city},#{region},#{address},#{level},#{linkman},#{linkmobilephone},#{linktelephone},#{email},#{status},#{address})
+  </insert>
+  <update id="updateStatus" parameterType="java.lang.Integer">
+    update agent set status=#{1} where ID=#{0}
+  </update>
+  <update id="updateAgent" parameterType="com.zavr.usercenterservice.pojos.Agent">
+    update agent set Name=#{name},SimpleName=#{simplename},Province=#{province},City=#{city},Region=#{region},Address=#{address},Linkman=#{linkman},
+    LinkMobilePhone=#{linkmobilephone},LinkTelePhone=#{linktelephone},Email=#{email} where ID=#{id}
+  </update>
+  <select id="pageQuery" resultMap="BaseResultMap" parameterType="com.zavr.usercenterservice.pojos.Agent">
+    select * from agent
+    <where>
+      1=1
+      <if test="name!=null and name !=''">
+        and name like CONCAT(CONCAT('%', #{name,jdbcType=VARCHAR}),'%')
+      </if>
+      <if test="linkman != null and linkman != ''">
+        and linkman like CONCAT(CONCAT('%', #{linkman,jdbcType=VARCHAR}),'%')
+      </if>
+    </where>
+  </select>
+</mapper>
